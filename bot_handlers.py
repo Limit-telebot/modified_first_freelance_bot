@@ -129,11 +129,11 @@ async def register_handlers(bot: AsyncTeleBot):
             warning = "‌ေငွလွှဲ‌ေပြစာ **မှားမှန်**စစ်‌ေဆး‌ေပးပါ။"
             try:
                 await bot.send_photo(chat_id=config.ADMIN_ID, photo=file_id, caption=warning, reply_markup=markup, parse_mode="markdown")
-                await bot.edit_message_text(user_id, "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာကို **admin မှ စစ်‌ေဆး‌ေနပါပြီ ‌ေခတ္တ‌ေစာင့်ဆိုင်း‌ေပးပါ။**")
+                await bot.edit_message_text(user_id, text = "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာကို **admin မှ စစ်‌ေဆး‌ေနပါပြီ ‌ေခတ္တ‌ေစာင့်ဆိုင်း‌ေပးပါ။**")
             except Exception as e:
                 logging.error(f"Admin ထံ‌ေပးပို့ရာ error ဖြစ်‌ေနပါသည်။ error: {e}")
                 warning = f"user ထံမှ ‌ေငွလွှဲပံု ‌ေပးပို့ရာတွင် **error ဖြစ်‌ေနပါသည်။** error: {e}"
-                await bot.send_message(chat_id=config.ADMIN_ID, caption=warning, parse_mode="markdown")
+                await bot.send_message(chat_id=config.ADMIN_ID, text=warning, parse_mode="markdown")
 
 #manual စစ်ခြင်း ပထမ အကြိမ် အတည်ပြု approved or REJECT
 
@@ -240,10 +240,8 @@ async def register_handlers(bot: AsyncTeleBot):
         try:
             if call.data == "user_csv":
                 csv_buffer = await database.user_csv()
-                csv_file = types.InputFile(csv_buffer, file_name="all_users_list.csv")
                 await bot.answer_callback_query(call.id, "Uploading docs...")
-                await bot.send_document(config.ADMIN_ID, csv_file, caption="📊 **bot စတင်သည့်အချိန်မှ ယနေ့ထိ** user စုစုပေါင်းစာရင်း။", parse_mode="markdown")
-                
+                await bot.send_document(config.ADMIN_ID, csv_buffer, visible_file_name="all_users_list.csv", caption="📊 **bot စတင်သည့်အချိန်မှ ယနေ့ထိ** user စုစုပေါင်းစာရင်း။", parse_mode="markdown")
             elif call.data in ["broadcast", "search", "delete"]:
                 await bot.answer_callback_query(call.id, "Preparing...")
                 
