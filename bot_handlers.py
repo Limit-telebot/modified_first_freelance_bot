@@ -116,7 +116,7 @@ async def register_handlers(bot: AsyncTeleBot):
         file_id = message.photo[-1].file_id
         await bot.send_chat_action(user_id, "typing")
         waiting_msg = await bot.send_message(user_id, "လူကြီးမင်း၏ငွေလွှဲပြေစာကိုစစ်ဆေးနေပါသည်၊\n‌ေခတ္တစောင့်ဆိုင်းပေးပါ။")
-        analysis_image = await verify_and_activate_vip(file_id)
+        analysis_image = await database.verify_and_activate_vip(file_id)
         if analysis_image == "ALREADY_USED":
             await bot.edit_message_text(user_id, "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာသည် အသံုးပြုပြီးသား ဖြစ်‌ပါသဖြင့် **VIP ဝင်၍ မရနိုင်ပါ။**")
             return
