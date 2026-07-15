@@ -120,6 +120,7 @@ async def _admin_accept_direct(u_id, photo_id):
     expire_date = datetime.datetime.now() + datetime.timedelta(minutes=1)
     expire_str = expire_date.strftime("%Y-%m-%d %H:%M:%S")
     async with aiosqlite.connect(DB_NAME) as conn:
+        await conn.execute("UPDATE user SET role = 'VIP', expire_date = ?, last_activity = ? WHERE user_id = ?", (expire_str, expire_str, user_id))
         await conn.execute("""INSERT INTO record (user_id, time, file_id, status) VALUES (?, ?, ?, 'APPROVED')""", (u_id, expire_str, photo_id))
         await conn.commit()
     return True
