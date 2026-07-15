@@ -209,8 +209,8 @@ async def register_handlers(bot: AsyncTeleBot):
                     types.InlineKeyboardButton("APPROVE ✅", callback_data=f"CONFIRM_APPROVED_{u_id}"),
                     types.InlineKeyboardButton("REJECT ❌", callback_data=f"CONFIRM_REJECTED_{u_id}")
                 )
+                await bot.answer_callback_query(call.id)
                 await bot.edit_message_caption(chat_id=config.ADMIN_ID, message_id=call.message.message_id, caption="⚠️ ပြန်လည်ရွေးချယ်ပါရန်...", reply_markup=markup)
-            await bot.answer_callback_query(call.id)
         except Exception as e:
             logging.error(f"Error in admin verify callback: {e}")
             await bot.send_message(config.ADMIN_ID, f"**Error** in admin verify callback: {e}")
