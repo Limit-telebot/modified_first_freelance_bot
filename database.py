@@ -180,8 +180,8 @@ async def _get_and_clean_expired_vips_direct():
 async def add_or_update_user(user_id, username):
     return await execute_in_queue(_add_or_update_user_direct, user_id, username)
 
-async def verify_and_activate_vip(user_id: int, file_id):
-    return await execute_in_queue(_verify_and_activate_vip_direct, user_id, file_id)
+async def verify_and_activate_vip(file_id):
+    return await execute_in_queue(_verify_and_activate_vip_direct, file_id)
 
 async def admin_accept(u_id, photo_id):
     return await execute_in_queue(_admin_accept_direct, u_id, photo_id)
