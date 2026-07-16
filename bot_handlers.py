@@ -334,8 +334,8 @@ async def register_handlers(bot: AsyncTeleBot):
             delete_user = await database.delete_user(u_id)
             if delete_user:
                 # 💡 parse_mode ကို HTML ပြောင်းပြီး tag များကို HTML အဖြစ် ပြောင်းလဲလိုက်ပါသည်
-                await bot.ban_chat_member(chat_id=config.VIP_CHANNEL_ID, user_id=user_id)
-                await bot.unban_chat_member(chat_id=config.VIP_CHANNEL_ID, user_id=user_id)
+                await bot.ban_chat_member(chat_id=config.VIP_CHANNEL_ID, user_id=u_id)
+                await bot.unban_chat_member(chat_id=config.VIP_CHANNEL_ID, user_id=u_id)
                 success_msg = f"<b>Deleted</b> 🦹\nUsername: {delete_user} \nuser_id: <code>{u_id}</code>\nကိုအောင်မြင်စွာ ဖျက်ပြီးပါပြီ။"
                 await bot.reply_to(message, success_msg, parse_mode="HTML")
             else:
