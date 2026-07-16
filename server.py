@@ -61,3 +61,8 @@ async def telegram_webhook(request: Request):
     except Exception as e:
         logging.error(f"webhook error: {e}")
         return {"status": "error", "message": str(e)}
+
+@app.get("/")
+async def root():
+    return {"status": "Bot is running!"}
+
