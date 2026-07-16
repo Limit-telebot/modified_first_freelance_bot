@@ -346,19 +346,19 @@ async def register_handlers(bot: AsyncTeleBot):
             logging.exception(f"Error in delete function: {e}")
 #member ဝင်ခွင့်ရှိမရှိစစ်မယ်၊ရှိရင် ဝင်ခိုင်းမယ် မရှိရင် မဝင်ခိုင်းဘူး
     @bot.chat_join_request_handler()
-        async def handle_join_request(update):
-            user_id = update.from_user.id
-            chat_id = update.chat.id  # VIP Channel ID
-            try:
-                user_status = await database.check_user(user_id) 
-                if user_status in ["VIP", "ADMIN"]:
+    async def handle_join_request(update):
+        user_id = update.from_user.id
+        chat_id = update.chat.id  # VIP Channel ID
+        try:
+            user_status = await database.check_user(user_id) 
+            if user_status in ["VIP", "ADMIN"]:
                 # VIP သက်တမ်းရှိရင် ဝင်ခွင့်ပြုလိုက်မယ်
-                    await bot.approve_chat_join_request(chat_id, user_id)
-                    await bot.send_message(user_id, "✅ သင်သည် VIP ဖြစ်သောကြောင့် Channel ထဲသို့ ဝင်ခွင့်ပြုလိုက်ပါပြီ။")
-                else:
+                await bot.approve_chat_join_request(chat_id, user_id)
+                await bot.send_message(user_id, "✅ သင်သည် VIP ဖြစ်သောကြောင့် Channel ထဲသို့ ဝင်ခွင့်ပြုလိုက်ပါပြီ။")
+            else:
                 # VIP သက်တမ်းကုန်နေရင် သို့မဟုတ် VIP မဟုတ်ရင် ငြင်းပယ်မယ်
-                    await bot.decline_chat_join_request(chat_id, user_id)
-                    await bot.send_message(user_id, "❌ သင့် VIP သက်တမ်းကုန်ဆုံးသွားပြီဖြစ်၍ ဝင်ခွင့်မပြုနိုင်ပါ။ ကျေးဇူးပြု၍ သက်တမ်းတိုးပါ။")
-            except Exception as e:
-                logging.error(f"Error handling join request: {e}")
+                await bot.decline_chat_join_request(chat_id, user_id)
+                await bot.send_message(user_id, "❌ သင့် VIP သက်တမ်းကုန်ဆုံးသွားပြီဖြစ်၍ ဝင်ခွင့်မပြုနိုင်ပါ။ ကျေးဇူးပြု၍ သက်တမ်းတိုးပါ။")
+        except Exception as e:
+            logging.error(f"Error handling join request: {e}")
             
