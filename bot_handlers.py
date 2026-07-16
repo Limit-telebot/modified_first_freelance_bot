@@ -118,7 +118,7 @@ async def register_handlers(bot: AsyncTeleBot):
         waiting_msg = await bot.send_message(user_id, "လူကြီးမင်း၏ငွေလွှဲပြေစာကိုစစ်ဆေးနေပါသည်၊\n‌ေခတ္တစောင့်ဆိုင်းပေးပါ။")
         analysis_image = await database.verify_and_activate_vip(file_id)
         if analysis_image == "ALREADY_USED":
-            await bot.edit_message_text(user_id, "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာသည် အသံုးပြုပြီးသား ဖြစ်‌ပါသဖြင့် **VIP ဝင်၍ မရနိုင်ပါ။**", message_id = waiting_msg.message_id)
+            await bot.edit_message_text(chat_id = user_id, text = "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာသည် အသံုးပြုပြီးသား ဖြစ်‌ပါသဖြင့် **VIP ဝင်၍ မရနိုင်ပါ။**", message_id = waiting_msg.message_id)
             return
         elif analysis_image == None:
             markup = types.InlineKeyboardMarkup()
@@ -129,7 +129,7 @@ async def register_handlers(bot: AsyncTeleBot):
             warning = "‌ေငွလွှဲ‌ေပြစာ **မှားမှန်**စစ်‌ေဆး‌ေပးပါ။"
             try:
                 await bot.send_photo(chat_id=config.ADMIN_ID, photo=file_id, caption=warning, reply_markup=markup, parse_mode="markdown")
-                await bot.edit_message_text(user_id, text = "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာကို **admin မှ စစ်‌ေဆး‌ေနပါပြီ ‌ေခတ္တ‌ေစာင့်ဆိုင်း‌ေပးပါ။**", message_id = waiting_msg.message_id)
+                await bot.edit_message_text(chat_id = user_id, text = "လူကြီးမင်း၏ငွေလွှဲ‌ေပြစာကို **admin မှ စစ်‌ေဆး‌ေနပါပြီ ‌ေခတ္တ‌ေစာင့်ဆိုင်း‌ေပးပါ။**", message_id = waiting_msg.message_id)
             except Exception as e:
                 logging.error(f"Admin ထံ‌ေပးပို့ရာ error ဖြစ်‌ေနပါသည်။ error: {e}")
                 warning = f"user ထံမှ ‌ေငွလွှဲပံု ‌ေပးပို့ရာတွင် **error ဖြစ်‌ေနပါသည်။** error: {e}"
@@ -343,4 +343,4 @@ async def register_handlers(bot: AsyncTeleBot):
         except ValueError:
             await bot.reply_to(message, "❌ ကျေးဇူးပြု၍ ဂဏန်း (User ID) စစ်စစ်ကိုသာ ရိုက်နှိပ်ပေးပါဗျာ။")
         except Exception as e:
-            logging.error(f"Error in delete function: {e}")
+            logging.exception(f"Error in delete function: {e}")
