@@ -184,10 +184,10 @@ async def register_handlers(bot: AsyncTeleBot):
                 result = await database.admin_accept(u_id, photo_id)
                 if result:
                     try:
-                        invite_link_obj = await bot.create_chat_invite_link(chat_id=config.VIP_CHANNEL_ID, member_limit=1)
-                        success_text = f"သင့်ငွေလွှဲကို admin မှအတည်ပြု လက်ခံလိုက်ပါသည်။\n**သင့်ငွေလွှဲအောင်မြင်ပါတယ်**\nအောက်က vip link ကိုနှိပ်ပြီး member ဝင်နိုင်ပါပြီီ။\nvip link: {invite_link_obj.invite_link}"
+                        invite_link_obj = await bot.create_chat_invite_link(chat_id=config.VIP_CHANNEL_ID, creates_join_request=True)
+                        success_text = f"သင့်ငွေလွှဲကို admin မှအတည်ပြု လက်ခံလိုက်ပါသည်။\n**သင့်ငွေလွှဲအောင်မြင်ပါတယ်**\n Request to Join ကိုနှိပ်ပြီး member ဝင်နိုင်ပါပြီီ။\nvip link: {invite_link_obj.invite_link}"
                         await bot.send_message(chat_id=int(u_id), text=success_text, parse_mode="markdown")
-                        await bot.edit_message_caption(chat_id=config.ADMIN_ID, message_id=call.message.message_id, caption="**APPROVED** ✅ စစ်ဆေးပြီး **one time link **ထုတ်ပေးလိုက်ပါပြီ။", reply_markup=None)
+                        await bot.edit_message_caption(chat_id=config.ADMIN_ID, message_id=call.message.message_id, caption="**APPROVED** ✅ စစ်ဆေးပြီး **Request to Join **ထုတ်ပေးလိုက်ပါပြီ။", reply_markup=None)
                     except Exception as e:
                         logging.error(f"Failed to send invite link to user {u_id}: {e}")
                         warning = f"Failed to send invite link to user {u_id}: {e}"
@@ -344,3 +344,23 @@ async def register_handlers(bot: AsyncTeleBot):
             await bot.reply_to(message, "❌ ကျေးဇူးပြု၍ ဂဏန်း (User ID) စစ်စစ်ကိုသာ ရိုက်နှိပ်ပေးပါဗျာ။")
         except Exception as e:
             logging.exception(f"Error in delete function: {e}")
+#member ဝင်ခွင့်ရှိမရှိစစ်မယ်၊ရှိရင် ဝင်ခိုင်းမယ် မရှိရင် မဝင်ခိုင်းဘူး
+    @bot.chat_join_request_handler()
+        async def handle_join_request(update):
+        user_id = update.from_user.id
+        chat_id = update.chat.id  # VIP Channel ID
+        
+        try:
+            user_status = await database.check_user(user_id) 
+            
+            if user_status in ["VIP", "ADMIN"]:
+                # VIP သက်တမ်းရှိရင် ဝင်ခွင့်ပြုလိုက်မယ်
+                await bot.approve_chat_join_request(chat_id, user_id)
+                await bot.send_message(user_id, "✅ သင်သည် VIP ဖြစ်သောကြောင့် Channel ထဲသို့ ဝင်ခွင့်ပြုလိုက်ပါပြီ။")
+            else:
+                # VIP သက်တမ်းကုန်နေရင် သို့မဟုတ် VIP မဟုတ်ရင် ငြင်းပယ်မယ်
+                await bot.decline_chat_join_request(chat_id, user_id)
+                await bot.send_message(user_id, "❌ သင့် VIP သက်တမ်းကုန်ဆုံးသွားပြီဖြစ်၍ ဝင်ခွင့်မပြုနိုင်ပါ။ ကျေးဇူးပြု၍ သက်တမ်းတိုးပါ။")
+        except Exception as e:
+            logging.error(f"Error handling join request: {e}")
+            
